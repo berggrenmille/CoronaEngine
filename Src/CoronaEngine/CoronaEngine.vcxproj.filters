@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\ECS">
-      <UniqueIdentifier>{534de03f-d40b-4a1f-a9df-076ff389f839}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ECS">
-      <UniqueIdentifier>{9fad14df-723b-447d-9a5f-9146c2f2424f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GUI">
       <UniqueIdentifier>{88724bff-62a4-468f-a4fa-a1b0a8b8bb63}</UniqueIdentifier>
     </Filter>
@@ -31,29 +25,41 @@
     <Filter Include="Source Files\Detail">
       <UniqueIdentifier>{2e910294-dfad-468d-8db8-89aaca1417e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\World">
+      <UniqueIdentifier>{534de03f-d40b-4a1f-a9df-076ff389f839}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{9fad14df-723b-447d-9a5f-9146c2f2424f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoronaEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ECS.cpp">
-      <Filter>Source Files\ECS</Filter>
+      <Filter>Source Files\World</Filter>
     </ClCompile>
     <ClCompile Include="IdFactory.cpp">
       <Filter>Source Files\Detail</Filter>
     </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ECS.h">
-      <Filter>Header Files\ECS</Filter>
+      <Filter>Header Files\World</Filter>
     </ClInclude>
     <ClInclude Include="IdFactory.h">
       <Filter>Header Files\Detail</Filter>
     </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ECS.inl">
-      <Filter>Source Files\ECS</Filter>
+      <Filter>Source Files\World</Filter>
     </None>
   </ItemGroup>
 </Project>

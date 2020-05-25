@@ -172,10 +172,12 @@
     <ClCompile Include="CoronaEngine.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="IdFactory.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ECS.h" />
     <ClInclude Include="IdFactory.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ECS.inl" />

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "ECS.h"
-
+#include <chrono>
 /* Example registration
  * #include <rttr/registration>
 
@@ -40,15 +40,22 @@ RTTR_REGISTRATION
 
 int main()
 {
-	for(int i = 0; i<10; ++i)
+	Corona::ECS ecs = Corona::ECS();
+	for(int i = 0; i<1024; ++i)
 	{
-		auto ent = Corona::ECS::RegisterEntity();
-		Corona::ECS::RegisterComponent<test>(ent);
+		auto ent = ecs.RegisterEntity();
+		ecs.RegisterComponent<test>(ent).a = i;
+
 
 	}
+	ecs.Refresh();
 
-	std::function a = [](test& e) {std::cout << e.a << std::endl; };
-	Corona::ECS::ForEach(a);
-	std::cout << Corona::Factory::TypeId<void>::GetFlag<test>() << std::endl;
+	auto t0 = std::chrono::high_resolution_clock::now();
+	std::function a = [](int64_t id, test& e) {e.a = e.a * e.b; };
+	ecs.ForEach<test>(a);
+	auto t1 = std::chrono::high_resolution_clock::now();
+	auto t2 = t1 - t0;
+	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(t2).count() << std::endl;
+	//std::cout << Corona::Factory::TypeId<void>::GetFlag<test>() << std::endl;
 
 }

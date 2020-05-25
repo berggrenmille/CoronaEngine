@@ -3,35 +3,80 @@
 
 namespace Corona
 {
+	void ECS::Refresh()
+	{
+		int64_t dead = 0, alive = numAliveEntities;
+		while(true)
+		{
+			for(;true;++dead)
+			{
+				if (dead >= alive)
+				{
+					return;
+				}
 
-	std::array<ECS::Entity, MAX_ENTITIES>				ECS::entityPool;
-	std::array<rttr::variant, MAX_SYSTEMS>				ECS::systemPool;
-	std::unordered_map<uint64_t, rttr::variant*>		ECS::componentMap;
+				if (!entityVector[dead].alive)
+				{
+					numAliveEntities--;
+					break; // Found dead entity
+				}
+			}
 
-	int64_t ECS::numAliveEntities = 0;
+			for (; true; --alive)
+			{
+				if (entityVector[alive].alive)
+					break; // Found alive
+				if (alive <= dead)
+					return;
+			}
 
-	int64_t ECS::GetNumAliveEntities()
+			assert(entityVector[alive].alive);
+			assert(!entityVector[dead].alive);			
+			Factory::DataIndex::FreeIndex(entityVector[dead].dataIndex);
+			entityVector[dead].alive = entityVector[alive].alive;
+			entityVector[dead].dataIndex = entityVector[alive].dataIndex;
+			entityVector[dead].componentMask = entityVector[alive].componentMask;
+
+			entityVector[alive].alive = false;
+			entityVector[alive].componentMask = 0;
+			
+			++dead;
+			--alive;
+		
+		}
+	}
+
+	int64_t ECS::GetNumAliveEntities() const
 	{
 		return numAliveEntities;
 	}
 
 	ECS::Entity* ECS::RegisterEntity()
 	{
-		const uint64_t entityIndex = Factory::Id<Entity>::GetId();
-		assert(numAliveEntities < MAX_ENTITIES && "Entity capacity reached!");
+		if(numAliveEntities == reservedEntities)
+		{
+			auto newSize = reservedEntities * 2;
+			//Allocate more space
+			entityVector.resize(newSize);
+			componentVector.resize(newSize * MAX_COMPONENTS_PER_ENTITY);
+			entityDataIndexToIndex.resize(newSize);
+			reservedEntities = newSize;
+		}
 
-		entityPool[entityIndex].componentMask = 0;
-		entityPool[entityIndex].index = entityIndex;
-		entityPool[entityIndex].isAlive = true;
-		entityPool[entityIndex].dataIndex = Factory::DataIndex::GetIndex();
 
-		++numAliveEntities;
+		const auto dataIndex = Factory::DataIndex::GetIndex();
+		
+		
+		entityVector[numAliveEntities].componentMask = 0;
+		entityVector[numAliveEntities].alive = true;
+		entityVector[numAliveEntities].dataIndex = dataIndex;
+		entityDataIndexToIndex[dataIndex] = numAliveEntities;
 
-		return &entityPool[entityIndex];
+		return &entityVector[numAliveEntities++];
 	}
 
 	void ECS::DeleteEntity(Entity* entity)
 	{
-		entity->pendingDeath = true;
+		entity->alive = false;
 	}
 }
