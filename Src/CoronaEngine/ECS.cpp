@@ -10,7 +10,7 @@ namespace Corona
 		{
 			while (reservedDataIndices.find(dataIndexCounter) != reservedDataIndices.end())
 				dataIndexCounter++;
-			return dataIndexCounter;
+			return dataIndexCounter++;
 		}
 		else
 		{

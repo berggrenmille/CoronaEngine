@@ -9,7 +9,7 @@
 #include <limits>
 #include <unordered_set>
 #include <queue>
-
+#include <dexode/EventBus.hpp>
 constexpr auto MAX_COMPONENTS_PER_ENTITY = 64;
 
 constexpr auto DEDICATED_MEMORY_FOR_COMPONENTS = 8 * 1024 * 1024 * 1024;
@@ -33,6 +33,7 @@ namespace Corona
 		};
 
 
+
 	private:		
 		int64_t reservedEntities = 64;
 		int64_t numAliveEntities = 0;
@@ -49,6 +50,8 @@ namespace Corona
 		int64_t						 dataIndexCounter = 0;
 
 	public:
+
+
 		template< typename... Cs >
 		constexpr uint64_t ComponentMask();
 		
@@ -73,11 +76,11 @@ namespace Corona
 		C&	GetComponent(Entity* entity);
 
 		template <typename S>
-		S& RegisterSystem(Entity* entity);
+		S& RegisterSystem();
 		template <typename S>
-		void DeleteSystem(Entity* entity);
+		void DeleteSystem();
 		template <typename S>
-		S& GetSystem(Entity* entity);
+		S& GetSystem();
 
 		template <typename ... Cs, typename F>
 		void ForEach(F&& func);

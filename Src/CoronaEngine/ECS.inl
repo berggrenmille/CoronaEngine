@@ -24,7 +24,7 @@ namespace Corona
 
 		rttr::type t = rttr::type::get<C>();
 		componentVector[componentIndex] = t.create();
-		return componentVector[componentIndex].get_value<C>();
+		return rttr::variant_cast<C&>(componentVector[componentIndex]);
 	}
 
 	template <typename C>
@@ -46,11 +46,11 @@ namespace Corona
 		assert((entity->componentMask & typeMask) == typeMask && "Entity does not represent given component");
 		const auto componentIndex = entity->dataIndex * MAX_COMPONENTS_PER_ENTITY + typeId;
 
-		return *rttr::detail::unsafe_variant_cast<C>(&componentVector[componentIndex]);
+		return rttr::variant_cast<C&>(componentVector[componentIndex]);
 	}
 
 	template <typename S>
-	S& ECS::RegisterSystem(Entity* entity)
+	S& ECS::RegisterSystem()
 	{
 		const int64_t typeId = Factory::TypeId<char>::GetId<S>();
 
@@ -62,11 +62,12 @@ namespace Corona
 		//Run time reflection
 		rttr::type t = rttr::type::get<S>();
 		systemVector[typeId] = t.create();
-		return systemVector[typeId].get_value<S>();
+		S& system = systemVector[typeId].get_value<S>();
+		return system;
 	}
 
 	template <typename S>
-	void ECS::DeleteSystem(Entity* entity)
+	void ECS::DeleteSystem()
 	{
 		const uint64_t typeId = Factory::TypeId<char>::GetId<S>();
 		assert(systemVector[typeId].is_valid() && "System is not registred");
@@ -75,7 +76,7 @@ namespace Corona
 	}
 
 	template <typename S>
-	S& ECS::GetSystem(Entity* entity)
+	S& ECS::GetSystem()
 	{
 		const uint64_t typeId = Factory::TypeId<char>::GetId<S>();
 		assert(systemVector[typeId].is_valid() && "System is not registred");

@@ -117,7 +117,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>D:\Visual Studio\CoronaEngine\Src\CoronaEngine\Dependencies\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>rttr_core_d.lib;%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2test.lib</AdditionalDependencies>
+      <AdditionalDependencies>EventBus.lib;rttr_core_d.lib;%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2test.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -166,21 +166,25 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>D:\Visual Studio\CoronaEngine\Src\CoronaEngine\Dependencies\Lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>rttr_core.lib;%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2test.lib</AdditionalDependencies>
+      <AdditionalDependencies>EventBus.lib;rttr_core.lib;%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2test.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)Dependencies\Bin\Release\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ECS.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="IdFactory.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,8 @@
 #include <chrono>
 #include <sdl/SDL.h>
 #include <glad/glad.h>
+#include "Log.h"
+#include "Event.h"
 /* Example registration
  * #include <rttr/registration>
 
@@ -38,10 +40,17 @@ RTTR_REGISTRATION
 		 .property("b", &test::b);
 }
 
-
+struct OK{};
 
 int main(int argc, char* argv[])
 {
+	Corona::Debug::Init();
+
+	dexode::EventBus::Listener listener{Corona::Event::MainBus };
+	listener.listen([](const OK& event) {DEBUG_TRACE("GOT EVENT"); });
+	Corona::Event::MainBus->postpone(OK{});
+	Corona::Event::MainBus->process();
+	
 	Corona::World world = Corona::World();
 
 	for(int i = 0; i<1024; ++i)
@@ -55,11 +64,11 @@ int main(int argc, char* argv[])
 
 	auto t0 = std::chrono::high_resolution_clock::now();
 	auto world2 = world;
-	//auto a = [](int64_t id, test& e) {std::cout << e.a << std::endl; };
-	//world2.ecs.ForEach<test>(a);
+	auto a = [](int64_t id, test& e) {std::cout << e.a << std::endl; };
+	world2.ecs.ForEach<test>(a);
 	auto t1 = std::chrono::high_resolution_clock::now();
 	auto t2 = t1 - t0;
-	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(t2).count() << std::endl;
+
 	//std::cout << Corona::Factory::TypeId<void>::GetFlag<test>() << std::endl;
 	return 0;
 }
