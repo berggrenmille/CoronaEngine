@@ -3,6 +3,37 @@
 
 namespace Corona
 {
+	uint64_t ECS::GetDataIndex()
+	{
+		uint64_t index;
+		if(freeDataIndices.empty())
+		{
+			while (reservedDataIndices.find(dataIndexCounter) != reservedDataIndices.end())
+				dataIndexCounter++;
+			return dataIndexCounter;
+		}
+		else
+		{
+			index = freeDataIndices.front();
+			freeDataIndices.pop();
+		}
+		return index;
+	}
+
+	void ECS::FreeDataIndex(uint64_t index)
+	{
+		freeDataIndices.push(index);
+		if (reservedDataIndices.find(index) != reservedDataIndices.end())
+			reservedDataIndices.erase(index);
+	}
+
+	uint64_t ECS::ReserveDataIndex(uint64_t index)
+	{
+		assert(reservedDataIndices.find(index) == reservedDataIndices.end() && "DataIndex already reserved!");
+		reservedDataIndices.insert(index);
+		return index;
+	}
+
 	void ECS::Refresh()
 	{
 		int64_t dead = 0, alive = numAliveEntities;
@@ -32,7 +63,7 @@ namespace Corona
 
 			assert(entityVector[alive].alive);
 			assert(!entityVector[dead].alive);			
-			Factory::DataIndex::FreeIndex(entityVector[dead].dataIndex);
+			FreeDataIndex(entityVector[dead].dataIndex);
 			entityVector[dead].alive = entityVector[alive].alive;
 			entityVector[dead].dataIndex = entityVector[alive].dataIndex;
 			entityVector[dead].componentMask = entityVector[alive].componentMask;
@@ -64,7 +95,7 @@ namespace Corona
 		}
 
 
-		const auto dataIndex = Factory::DataIndex::GetIndex();
+		const auto dataIndex = GetDataIndex();
 		
 		
 		entityVector[numAliveEntities].componentMask = 0;

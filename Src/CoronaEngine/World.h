@@ -6,6 +6,6 @@ namespace Corona
 	{
 	public:
 		ECS ecs;
-	
+
 	};
 }

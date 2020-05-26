@@ -7,6 +7,8 @@
 #include <rttr/registration>
 #include "IdFactory.h"
 #include <limits>
+#include <unordered_set>
+#include <queue>
 
 constexpr auto MAX_COMPONENTS_PER_ENTITY = 64;
 
@@ -34,17 +36,22 @@ namespace Corona
 	private:		
 		int64_t reservedEntities = 64;
 		int64_t numAliveEntities = 0;
-		std::vector<Entity>				entityVector			   = std::vector<Entity>(reservedEntities);
-		std::vector<int64_t>			entityDataIndexToIndex = std::vector<int64_t>(reservedEntities);
-		std::vector<rttr::variant>		componentVector		   = std::vector<rttr::variant>(reservedEntities * MAX_COMPONENTS_PER_ENTITY);
+		std::vector<Entity>				entityVector				= std::vector<Entity>(reservedEntities);
+		std::vector<int64_t>			entityDataIndexToIndex		= std::vector<int64_t>(reservedEntities);
+		std::vector<rttr::variant>		componentVector				= std::vector<rttr::variant>(reservedEntities * MAX_COMPONENTS_PER_ENTITY);
 		std::vector<rttr::variant>		systemVector;
 
+		uint64_t	GetDataIndex();
+		void		FreeDataIndex(uint64_t index);
+		uint64_t	ReserveDataIndex(uint64_t index);
+		std::unordered_set<uint64_t> reservedDataIndices;
+		std::queue<uint64_t>		 freeDataIndices;
+		int64_t						 dataIndexCounter = 0;
 
 	public:
 		template< typename... Cs >
 		constexpr uint64_t ComponentMask();
 		
-		void		Tick();
 		void		Refresh();
 
 		[[nodiscard]] int64_t		GetNumAliveEntities() const;

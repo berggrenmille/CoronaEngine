@@ -61,30 +61,6 @@ namespace Corona::Factory
 	};
 
 
-	class DataIndex
-	{
-	public:
-		static uint64_t GetIndex()
-		{
-			uint64_t index;
-			if (freeIndices.empty())
-				index = counter++;
-			else //Reuse an old index
-			{
-				index = freeIndices.back();
-				freeIndices.pop_back();
-			}
-			return index;
-		}
-		static void FreeIndex(uint64_t index)
-		{
-			freeIndices.push_back(index);
-		}
-	private:
-		static std::list<uint64_t> freeIndices;
-		static uint64_t counter;
-	};
-
 
 	template<typename T>
 	std::list<uint64_t> Id<T>::freeIds = {};
